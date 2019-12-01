@@ -1,0 +1,65 @@
+﻿@model Supermarket.MVC.Models.Book
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ISBN)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ISBN)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+    </dl>
+</div>
+<div>
+   @if (User.IsInRole("Admin")) { <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>} 
+    <br />
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
+<br />
+<div>
+    <h5 class="text-center">Reviews</h5>
+    <hr />
+    <a asp-controller="Review" asp-action="Create" asp-route-bookId="@Model.Id" >Add Review</a>
+    @foreach (var review in Model.Reviews)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@review.User.UserName</h5>
+                <p class="card-text">@review.Description</p>
+                @if (User.IsInRole("Admin"))
+                {
+                    <form asp-controller="Review" asp-action="Delete" method="post" asp-route-reviewId="@review.Id" asp-route-bookId="@Model.Id">
+                        <input type="hidden" value="@review.Id" />
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    </form>
+                }
+            </div>
+        </div>
+    }
+</div>
